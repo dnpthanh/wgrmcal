@@ -1,11 +1,16 @@
 #' Calculate GRM (Genetic Relationship Matrix)
 #'
+#' This function computes a genetic relationship matrix based on genotype and frequency data.
+#'
 #' @param freq_table A data frame containing allele frequencies.
 #' @param geno_table A data frame containing genotype data.
 #' @param weight_vec A numeric vector of weights (default: NULL).
 #' @return A computed GRM matrix.
+#' @examples
+#' data(test_geno)
+#' data(test_freq)
+#' grm_cal(test_freq, test_geno)
 #' @export
-
 grm_cal <- function(freq_table, geno_table, weight_vec = NULL){
 
     #Frequency file
