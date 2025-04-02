@@ -38,7 +38,7 @@ grm_cal <- function(freq_table, geno_table, weight_vec = NULL){
 
 
     #Generate preallocated data frame
-    num_pairs <- (n * (n + 1)) / 2      # (i, j) in upper triangular matrix
+    num_pairs <- (n * (n + 1)) / 2      # (i, j) in upper triangular 
     grm <- data.frame(
         ID_1 = character(num_pairs),
         ID_2 = character(num_pairs),
