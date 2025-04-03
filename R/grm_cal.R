@@ -11,56 +11,37 @@
 #' data(test_freq)
 #' grm_cal(test_freq, test_geno)
 #' @export
-grm_cal <- function(freq_table, geno_table, weight_vec = NULL){
-
-    #Frequency file
-    freq <- freq_table
-    freq2 <- freq[!is.na(freq$MAF),]
-    freq2$`1-MAF` <- 1-freq2$MAF
-
-    #Genotype file (raw format)
+grm_cal <- function(freq_table, geno_table, weight_vec = NULL) {
+    # Frequency file
+    freq <- freq_table[!is.na(freq_table$MAF), ]
+    
+    # Genotype file
     geno <- geno_table
-    #cname <- colnames(geno)[7:dim(geno)[2]]
-    #cname2 <- gsub("_.", "", cname)
-    #colnames(geno)[7:dim(geno)[2]] <- cname2
-
-    #Sizes
     n <- nrow(geno)
     m <- ncol(geno)
-    p <- m - 6  # number of SNPs
+    p <- m - 6  # number of SNP
+
+    # Prepare M matrix (adjusted -2p)
+    geno_adj <- geno[, 7:m] - 2 * matrix(freq$MAF, nrow = n, ncol = p, byrow = TRUE)
+
+    # Weights (default = 1)
+    wg <- if (!is.null(weight_vec)) weight_vec else rep(1, p)
+
+    # Denominator
+    bot <- 2 * sum(freq$MAF * (1 - freq$MAF))
+
+    # MDM'
+    grm_matrix <- (as.matrix(geno_adj) %*% diag(wg) %*% t(as.matrix(geno_adj))) / bot
+
+    # Upper triangle
+    idx <- which(upper.tri(grm_matrix, diag = TRUE), arr.ind = TRUE)
     
-    #Prepare for numerator calculation. (Geno - 2p)  
-    geno_adj <- geno[, 7:m]  - 2 * matrix(freq2$MAF, nrow = n, ncol = p, byrow = TRUE)
-
-    if (!is.null(weight_vec)){
-        wg <- weight_vec
-    }else{
-        wg <- rep(1, p) 
-    }
-
-    #Denominator calculation
-    bot <- 2 * sum((freq2$MAF)*(freq2$`1-MAF`))
-
-
-    #Generate preallocated data frame
-    num_pairs <- (n * (n + 1)) / 2      # (i, j) in upper triangular 
+    # Result
     grm <- data.frame(
-        ID_1 = character(num_pairs),
-        ID_2 = character(num_pairs),
-        Rela = numeric(num_pairs),
-        stringsAsFactors = FALSE
+        ID_1 = geno[idx[, 1], 2],
+        ID_2 = geno[idx[, 2], 2],
+        Rela = grm_matrix[idx]
     )
 
-    #Relationship value calculation
-    x <- 1
-    for (i in 1:n) {
-        for (j in i:n) {
-            top <- sum(geno_adj[i, ] * geno_adj[j, ] * wg)   # Vectorize multiplication
-            grm$Rela[x] <- top / bot
-            grm$ID_1[x] <- geno[i, 2]
-            grm$ID_2[x] <- geno[j, 2]
-            x <- x + 1  
-        }
-    }
     return(grm)
 }
