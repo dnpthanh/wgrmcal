@@ -1,7 +1,14 @@
 # wgrmcal
 GRM calculator for MTG2
 
-# example
+# Installation
+```r
+install.packages("devtools")
+library(devtools)
+devtools::install_github("dnpthanh/wgrmcal")
+```
+
+# Example
 ```r
 # without weights
 data(test_geno)
