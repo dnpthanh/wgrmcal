@@ -10,6 +10,10 @@ devtools::install_github("dnpthanh/wgrmcal")
 
 # Example
 ```r
+library(wgrmcal)
+```
+
+```r
 # without weights
 data(test_geno)
 data(test_freq)
