@@ -5,6 +5,7 @@ GRM calculator for MTG2
 - Genotype file must not have NA(s).
 - Imputation should be performed for imputing missing genotype.
 - SNP IDs must be matched between genotype file and frequency file.
+- Weight table must have no column name.
 
 # Installation
 ```r
