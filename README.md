@@ -2,10 +2,10 @@
 GRM calculator for MTG2
 
 # Requirements
-Genotype file must not have NA(s).\n
-Imputation may be used for imputing missing genotype.\n
-SNP IDs must be matched between genotype file and frequency file.\n
-Parallel is recommended before executing grm_cam() function.
+- Genotype file must not have NA(s).
+- Imputation may be used for imputing missing genotype.
+- SNP IDs must be matched between genotype file and frequency file.
+- Parallel is recommended before executing grm_cam() function.
 
 # Installation
 ```r
