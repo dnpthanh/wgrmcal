@@ -11,12 +11,12 @@
 #' data(test_freq)
 #' grm_cal(test_freq, test_geno)
 #' @export
-grm_cal <- function(freq_table, geno_table, weight_vec = NULL) {
+grm_cal <- function(freq_table, geno_table, weight = NULL) {
     # Frequency file
     if (any(is.na(freq_table$MAF))) {
         stop("There is NA(s) in frequency file.")
     }
-    
+
     freq <- freq_table
     
     # Genotype file
@@ -42,7 +42,16 @@ grm_cal <- function(freq_table, geno_table, weight_vec = NULL) {
                 2 * matrix(freq_matched$MAF, nrow = n, ncol = p, byrow = TRUE)
 
     # Weights (default = 1)
-    wg <- if (!is.null(weight_vec)) weight_vec else rep(1, p)
+    if (is.null(weight_vec)){
+        wg <- rep(1, p)
+    }else{
+        w_table <- weight
+        cname <- colnames(geno)[7:dim(geno)[2]]
+        wg <- data.frame(SNP = cname, weight = rep(1,length(cname)))
+        w_ind <- match(w_table[,1], cname)
+        valid_idx <- which(!is.na(w_ind))
+        wg[w_ind[valid_idx],2] <- w_table[,2][valid_idx]
+    }
 
     # Denominator
     bot <- 2 * sum(freq_matched$MAF * (1 - freq_matched$MAF))
@@ -59,5 +68,6 @@ grm_cal <- function(freq_table, geno_table, weight_vec = NULL) {
         ID_2 = geno[idx[, 2], 2],
         Rela = grm_matrix[idx]
     )
+
     return(grm)
 }
