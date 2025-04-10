@@ -57,7 +57,7 @@ grm_cal <- function(freq_table, geno_table, weight = NULL) {
     bot <- 2 * sum(freq_matched$MAF * (1 - freq_matched$MAF))
 
     # MDM'
-    grm_matrix <- (as.matrix(geno_adj) %*% diag(wg) %*% t(as.matrix(geno_adj))) / bot
+    grm_matrix <- (as.matrix(geno_adj) %*% diag(wg[,2]) %*% t(as.matrix(geno_adj))) / bot
 
     # Upper triangle
     idx <- which(upper.tri(grm_matrix, diag = TRUE), arr.ind = TRUE)
