@@ -1,7 +1,7 @@
 # wgrmcal
-GRM calculator for MTG2
-grm_cal() function is used for calculating GRM without standardizing.
-grm_cal_sd() function is used for calculating standardized GRM (GCTA-like).
+- GRM calculator for MTG2
+- grm_cal() function is used for calculating GRM without standardizing.
+- grm_cal_sd() function is used for calculating standardized GRM (GCTA-like).
 
 # Requirements
 - Genotype file must not have NA(s).
