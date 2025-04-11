@@ -29,7 +29,7 @@ grm_cal <- function(freq_table, geno_table, weight = NULL) {
     common_snp <- intersect(geno_snp_ids, freq$SNP)
 
     if (length(common_snp) == 0) {
-        stop("No common SNPs between freq and geno tables. Please check SNP IDs.")
+        stop("No common SNPs between frequency and genotype tables. Please check SNP IDs.")
     }
 
     freq_matched <- freq[match(common_snp, freq$SNP), ]
