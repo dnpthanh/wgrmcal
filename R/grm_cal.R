@@ -65,8 +65,8 @@ grm_cal <- function(freq_table, geno_table, weight = NULL) {
     
     # Result
     grm <- data.frame(
-        ID_1 = geno_table[idx[, 1], 2],
-        ID_2 = geno_table[idx[, 2], 2],
+        ID_1 = idx[, 1],
+        ID_2 = idx[, 2],
         Rela = grm_matrix[idx]
     )
 
