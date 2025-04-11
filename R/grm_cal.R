@@ -46,7 +46,7 @@ grm_cal <- function(freq_table, geno_table, weight = NULL) {
         wg <- rep(1, p)
     }else{
         w_table <- weight
-        cname <- colnames(geno)[7:dim(geno)[2]]
+        cname <- colnames(geno_matched)[7:dim(geno_matched)[2]]
         wg <- data.frame(SNP = cname, weight = rep(1,length(cname)))
         w_ind <- match(w_table[,1], cname)
         valid_idx <- which(!is.na(w_ind))
