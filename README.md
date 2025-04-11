@@ -1,5 +1,7 @@
 # wgrmcal
 GRM calculator for MTG2
+grm_cal() function is used for calculating GRM without standardizing.
+grm_cal_sd() function is used for calculating standardized GRM (GCTA-like).
 
 # Requirements
 - Genotype file must not have NA(s).
@@ -10,7 +12,6 @@ GRM calculator for MTG2
 # Installation
 ```r
 install.packages("devtools")
-library(devtools)
 devtools::install_github("dnpthanh/wgrmcal")
 ```
 
@@ -25,10 +26,12 @@ library(wgrmcal)
 data(test_geno)
 data(test_freq)
 test_grm <- grm_cal(test_freq, test_geno)
+test_grm_sd <- grm_cal_sd(test_freq, test_geno)
 ```
 
 ```r
 # with weights
 data(test_weight)
 test_grm2 <- grm_cal(test_freq, test_geno, test_weight)
+test_grm_sd2 <- grm_cal_sd(test_freq, test_geno, test_weight)
 ```
