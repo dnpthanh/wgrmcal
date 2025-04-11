@@ -5,6 +5,7 @@ GRM calculator for MTG2
 - Genotype file must not have NA(s).
 - Imputation should be performed for imputing missing genotype.
 - SNP IDs must be matched between genotype file and frequency file.
+- Output GRM is in .txt format for MTG2, first and second columns are ID order of fam files.
 
 # Installation
 ```r
