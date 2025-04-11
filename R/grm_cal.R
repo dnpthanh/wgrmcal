@@ -44,7 +44,7 @@ grm_cal <- function(freq_table, geno_table, weight = NULL) {
 
     # Weights (default = 1)
     if (is.null(weight)){
-        wg <- rep(1, 7:dim(geno_matched)[2])
+        wg <- rep(1, p)
     }else{
         w_table <- weight
         cname <- colnames(geno_matched)[7:dim(geno_matched)[2]]
