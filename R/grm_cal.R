@@ -9,7 +9,8 @@
 #' @examples
 #' data(test_geno)
 #' data(test_freq)
-#' grm_cal(test_freq, test_geno)
+#' data(test_weight)
+#' grm_cal(test_freq, test_geno, test_weight)
 #' @export
 grm_cal <- function(freq_table, geno_table, weight = NULL) {
     # Frequency file
@@ -42,7 +43,7 @@ grm_cal <- function(freq_table, geno_table, weight = NULL) {
                 2 * matrix(freq_matched$MAF, nrow = n, ncol = p, byrow = TRUE)
 
     # Weights (default = 1)
-    if (is.null(weight_vec)){
+    if (is.null(weight)){
         wg <- rep(1, p)
     }else{
         w_table <- weight
