@@ -36,7 +36,7 @@ grm_cal <- function(freq_table, geno_table, weight = NULL) {
     geno_matched <- geno_table[, c(1:6, match(common_snp, colnames(geno_table)))]
 
     n <- nrow(geno_matched) #number of animals
-    p <- length(7:dim(geno_matched)[2]) #number of SNPs
+    p <- dim(geno_matched)[2] - 6 #number of SNPs
 
     # Prepare M matrix (adjusted -2p)
     geno_adj <- as.matrix(geno_matched[, 7:ncol(geno_matched)]) - 
