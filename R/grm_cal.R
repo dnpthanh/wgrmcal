@@ -22,7 +22,7 @@ grm_cal <- function(freq_table, geno_table, weight = NULL) {
     
     # Genotype file
     if (any(is.na(geno_table))) {
-        stop("There is NA(s) in genotype file. Imputation may be needed.")
+        stop("There is NA(s) in genotype file. Phenotype may appear as NAs or Imputation may be needed.")
     }
 
     geno_snp_ids <- colnames(geno_table)[7:ncol(geno_table)]
@@ -43,20 +43,18 @@ grm_cal <- function(freq_table, geno_table, weight = NULL) {
                 2 * matrix(freq_matched$MAF, nrow = n, ncol = p, byrow = TRUE)
 
     # Weights (default = 1)
+    snp_names <- colnames(geno_matched)[7:dim(geno_matched)[2]]
     if (is.null(weight)){
-        wg <- data.frame(SNP = colnames(geno_matched)[7:dim(geno_matched)[2]], weight = rep(1, p))
+        wg <- data.frame(SNP = snp_names, weight = rep(1, p))
     }else{
-        w_table <- weight
-        cname <- colnames(geno_matched)[7:dim(geno_matched)[2]]
-        wg <- data.frame(SNP = cname, weight = rep(1,length(cname)))
-        w_ind <- match(w_table[,1], cname)
-        valid_idx <- which(!is.na(w_ind))
-        wg[w_ind[valid_idx],2] <- w_table[,2][valid_idx]
+        wg <- data.frame(SNP = snp_names, weight = rep(1,p))
+        matched_idx <- match(weight[, 1], snp_names)
+        valid_idx <- which(!is.na(matched_idx))
+        wg$weight[matched_idx[valid_idx]] <- weight[, 2][valid_idx]
     }
 
     # Denominator
-    bot <- 2 * sum(freq_matched$MAF * (1 - freq_matched$MAF))
-
+    bot <- 2 * sum(wg$weight * freq_matched$MAF * (1 - freq_matched$MAF))
     # MDM'
     grm_matrix <- (as.matrix(geno_adj) %*% diag(wg[,2]) %*% t(as.matrix(geno_adj))) / bot
 
