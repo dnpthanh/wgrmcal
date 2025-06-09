@@ -4,7 +4,7 @@
 #'
 #' @param freq_table A data frame containing allele frequencies.
 #' @param geno_table A data frame containing genotype data.
-#' @param weight_vec A numeric vector of weights (default: NULL).
+#' @param weight A data frame includes SNP names in the first column and their weights in the second column (default: NULL).
 #' @return A computed GRM matrix.
 #' @examples
 #' data(test_geno)
@@ -38,10 +38,6 @@ grm_cal <- function(freq_table, geno_table, weight = NULL) {
     n <- nrow(geno_matched) #number of animals
     p <- dim(geno_matched)[2] - 6 #number of SNPs
 
-    # Prepare M matrix (adjusted -2p)
-    geno_adj <- as.matrix(geno_matched[, 7:ncol(geno_matched)]) - 
-                2 * matrix(freq_matched$MAF, nrow = n, ncol = p, byrow = TRUE)
-
     # Weights (default = 1)
     snp_names <- colnames(geno_matched)[7:dim(geno_matched)[2]]
     if (is.null(weight)){
@@ -53,10 +49,18 @@ grm_cal <- function(freq_table, geno_table, weight = NULL) {
         wg$weight[matched_idx[valid_idx]] <- weight[, 2][valid_idx]
     }
 
-    # Denominator
-    bot <- 2 * sum(wg$weight * freq_matched$MAF * (1 - freq_matched$MAF))
-    # MDM'
-    grm_matrix <- (as.matrix(geno_adj) %*% diag(wg[,2]) %*% t(as.matrix(geno_adj))) / bot
+    # Prepare M matrix (x - 2p)
+    geno_adj <- as.matrix(geno_matched[, 7:ncol(geno_matched)]) - 
+                2 * matrix(freq_matched$MAF, nrow = n, ncol = p, byrow = TRUE)
+
+    # 2p(1-p) for each SNP
+    dk <- 2 * freq_matched$MAF * (1 - freq_matched$MAF)
+    
+    # Divide each column of geno_adj by 2p(1 - p)
+    geno_scaled <- sweep(geno_adj, 2, dk, FUN = "/")
+    
+    # Calculate GRM
+    grm_matrix <- (as.matrix(geno_scaled) %*% diag(wg$weight) %*% t(as.matrix(geno_scaled))) / sum(wg$weight)
 
     # Upper triangle
     idx <- which(upper.tri(grm_matrix, diag = TRUE), arr.ind = TRUE)
